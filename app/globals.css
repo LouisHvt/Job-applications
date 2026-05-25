@@ -25,3 +25,47 @@ body {
     text-wrap: balance;
   }
 }
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  nav,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #cv-print-area,
+  #cv-print-area * {
+    visibility: visible;
+  }
+
+  #cv-print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+  }
+
+  #cl-print-area,
+  #cl-print-area * {
+    visibility: visible;
+  }
+
+  #cl-print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    padding: 0;
+  }
+}

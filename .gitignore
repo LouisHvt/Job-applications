@@ -28,6 +28,19 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# private profile and job data
+data/profile.json
+data/jobs/
+!data/.gitkeep
+!data/jobs/.gitkeep
+
+# generated documents (personal)
+/generated/
+
+# tooling
+/.claude/
+/.superpowers/
+
 # vercel
 .vercel
 
