@@ -24,7 +24,13 @@ A local Next.js app that reads jobs from a Notion database and generates tailore
 2. Name it (e.g. "Jobs App"), select your workspace
 3. Copy the API key → `NOTION_API_KEY`
 
-**B) Create a Job Tracker database** with these properties:
+**B) Duplicate the Job Tracker template**
+
+Click this link and hit **Duplicate** to get a blank copy with the correct schema already set up:
+
+👉 [Job Tracker Template](https://wind-leaf-18d.notion.site/Job-Tracker-Template-36baa1de211e815c86edec1c101a3203)
+
+It includes these properties:
 
 | Property | Type |
 |---|---|
