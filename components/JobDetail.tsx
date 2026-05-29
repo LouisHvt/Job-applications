@@ -395,9 +395,28 @@ export default function JobDetail({ job, profile }: Props) {
                       </button>
                       <button
                         onClick={() => setShowCLPrintView(true)}
+                        className="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        Preview
+                      </button>
+                      <button
+                        onClick={async () => {
+                          const res = await fetch(`/api/jobs/${job.id}/cover-letter-pdf`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ coverLetter }),
+                          })
+                          const blob = await res.blob()
+                          const url = URL.createObjectURL(blob)
+                          const a = document.createElement('a')
+                          a.href = url
+                          a.download = `CoverLetter_${profile.name.replace(/\s+/g, '_')}.pdf`
+                          a.click()
+                          URL.revokeObjectURL(url)
+                        }}
                         className="flex-1 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-700"
                       >
-                        Preview & Download PDF
+                        Download PDF
                       </button>
                     </div>
                   </>
