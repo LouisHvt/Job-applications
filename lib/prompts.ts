@@ -103,6 +103,35 @@ CRITICAL: Never ask for clarification. Never say you need more information. Alwa
 Return plain text only. No subject line, no "Dear Hiring Manager" unless a name is available in the JD.`.trim()
 }
 
+export function buildInterviewPrepPrompt(experienceBank: string, profile: Profile): string {
+  return `You are preparing ${profile.name} for a job interview. You have access to their full experience bank and the job description.
+
+CANDIDATE EXPERIENCE BANK:
+${experienceBank}
+
+YOUR TASK:
+Produce a two-part interview preparation document.
+
+PART 1 - BRIEFING SHEET:
+- Company context: 2-3 sentences on what the company does and its market position (infer from the job description)
+- Role breakdown: what success looks like in this role, key responsibilities
+- 3-5 talking points: specific angles from ${profile.name}'s background that map directly to this role's priorities. Each point is one sentence.
+- 2-3 smart questions to ask the interviewer (specific to the role, not generic)
+
+PART 2 - Q&A PAIRS:
+Generate 5-7 likely interview questions for this specific role. For each:
+- Write the question exactly as an interviewer would ask it
+- Write a 3-5 sentence answer using ${profile.name}'s actual experience from the bank. Be specific with names, numbers, and outcomes. Never invent facts.
+
+HARD RULES:
+- Never use em-dashes anywhere
+- Never say "passionate about", "team player", "dynamic"
+- Answers must reference real experiences from the bank, not generic claims
+- Keep each answer under 100 words
+
+Return plain text, no markdown headers, no JSON. Separate Part 1 and Part 2 with the line: --- Q&A ---`.trim()
+}
+
 export function buildCVParserPrompt(): string {
   return `You are a CV parser. Extract structured data from the raw CV text provided.
 

@@ -162,6 +162,29 @@ export async function updateJobStatus(pageId: string, status: JobStatus): Promis
   })
 }
 
+export async function writeInterviewPrepToPage(pageId: string, content: string): Promise<void> {
+  const blocks: Parameters<typeof notion.blocks.children.append>[0]['children'] = [
+    { type: 'divider', divider: {} },
+    {
+      type: 'heading_2',
+      heading_2: {
+        rich_text: [{ type: 'text', text: { content: '🎯 Interview Prep' } }],
+        color: 'default',
+      },
+    },
+    ...content.split('\n').filter(Boolean).map(line => ({
+      type: 'paragraph' as const,
+      paragraph: {
+        rich_text: [{ type: 'text' as const, text: { content: line } }],
+        color: 'default' as const,
+      },
+    })),
+  ]
+  for (let i = 0; i < blocks.length; i += 100) {
+    await notion.blocks.children.append({ block_id: pageId, children: blocks.slice(i, i + 100) })
+  }
+}
+
 export async function fetchExperienceBank(): Promise<string> {
   const response = await notion.blocks.children.list({
     block_id: EXPERIENCE_BANK_PAGE_ID,
