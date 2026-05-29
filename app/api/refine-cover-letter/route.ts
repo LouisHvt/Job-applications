@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { fetchJob, fetchExperienceBank } from '@/lib/notion'
 import { getProfile } from '@/lib/data'
-import anthropic from '@/lib/anthropic'
+import { anthropic } from '@/lib/anthropic'
 import { buildCoverLetterSystemPrompt } from '@/lib/prompts'
 
 export async function POST(req: Request) {
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const systemPrompt = buildCoverLetterSystemPrompt(experienceBank, profile)
 
     const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
       system: systemPrompt,
       messages: [
