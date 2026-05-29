@@ -312,9 +312,28 @@ export default function JobDetail({ job, profile }: Props) {
                     <div className="flex gap-2">
                       <button
                         onClick={() => setShowPrintView(true)}
+                        className="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        Preview
+                      </button>
+                      <button
+                        onClick={async () => {
+                          const res = await fetch(`/api/jobs/${job.id}/cv-pdf`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ cvData }),
+                          })
+                          const blob = await res.blob()
+                          const url = URL.createObjectURL(blob)
+                          const a = document.createElement('a')
+                          a.href = url
+                          a.download = `CV_${profile.name.replace(/\s+/g, '_')}.pdf`
+                          a.click()
+                          URL.revokeObjectURL(url)
+                        }}
                         className="flex-1 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-700"
                       >
-                        Preview & Download PDF
+                        Download PDF
                       </button>
                     </div>
                   </div>
