@@ -153,6 +153,69 @@ export async function createJob(data: {
   return pageToJob(page)
 }
 
+export async function fetchAllJobLinks(): Promise<Set<string>> {
+  const links = new Set<string>()
+  let cursor: string | undefined
+  do {
+    const response = await notion.databases.query({
+      database_id: DATABASE_ID,
+      start_cursor: cursor,
+      filter_properties: ['Job Link'],
+    })
+    response.results.forEach((page: any) => {
+      const url = page.properties?.['Job Link']?.url
+      if (url) links.add(url)
+    })
+    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined
+  } while (cursor)
+  return links
+}
+
+export async function createScoutJob(data: {
+  role: string
+  company: string
+  jobLink: string
+  jobDescription: string
+  track?: import('./types').JobTrack
+}): Promise<void> {
+  await notion.pages.create({
+    parent: { database_id: DATABASE_ID },
+    properties: {
+      Role: { title: [{ text: { content: data.role } }] },
+      Company: { rich_text: [{ text: { content: data.company } }] },
+      Status: { select: { name: 'Proposed' } },
+      Source: { select: { name: 'Scout' } },
+      'Job Link': { url: data.jobLink },
+      ...(data.jobDescription ? { 'Job Description': { rich_text: chunkRichText(data.jobDescription.slice(0, 2000)) } } : {}),
+      ...(data.track ? { Track: { select: { name: data.track } } } : {}),
+      'Date Found': { date: { start: new Date().toISOString().split('T')[0] } },
+    },
+  })
+}
+
+export async function skipStaleProposedJobs(): Promise<number> {
+  const thirtyDaysAgo = new Date()
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+  const cutoff = thirtyDaysAgo.toISOString().split('T')[0]
+
+  const response = await notion.databases.query({
+    database_id: DATABASE_ID,
+    filter: {
+      and: [
+        { property: 'Status', select: { equals: 'Proposed' } },
+        { property: 'Date Found', date: { before: cutoff } },
+      ],
+    },
+  })
+
+  await Promise.all(
+    response.results.map((page: any) =>
+      notion.pages.update({ page_id: page.id, properties: { Status: { select: { name: 'Skipped' } } } })
+    )
+  )
+  return response.results.length
+}
+
 export async function updateJobStatus(pageId: string, status: JobStatus): Promise<void> {
   await notion.pages.update({
     page_id: pageId,

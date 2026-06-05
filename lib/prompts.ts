@@ -132,6 +132,39 @@ HARD RULES:
 Return plain text, no markdown headers, no JSON. Separate Part 1 and Part 2 with the line: --- Q&A ---`.trim()
 }
 
+export function buildScoutScoringPrompt(profile: Profile, jobs: Array<{ role: string; company: string; description: string; link: string }>): string {
+  const profileSummary = `
+Name: ${profile.name || 'Candidate'}
+Summary: ${profile.summary || ''}
+Skills: ${(profile.skills ?? []).join(', ')}
+Key stats: ${(profile.keyStats ?? []).join('; ')}
+Recent roles: ${(profile.experiences ?? []).slice(0, 3).map(e => `${e.title} at ${e.company}`).join(', ')}
+`.trim()
+
+  return `You are scoring job postings for relevance to a candidate's profile.
+
+CANDIDATE PROFILE:
+${profileSummary}
+
+TARGET SECTORS: events, partnerships, sports, entertainment, music, marketing, sponsorship, brand
+
+JOBS TO SCORE (JSON array):
+${JSON.stringify(jobs, null, 2)}
+
+For each job, return a relevance score from 0 to 10:
+- 8-10: Strong match — role, sector, and seniority all align
+- 6-7: Good match — most criteria align, minor gaps
+- 4-5: Partial match — sector or seniority fits but not both
+- 0-3: Poor match — unrelated sector, too senior/junior, or generic
+
+Return JSON only, no markdown:
+[
+  { "link": "<job link>", "score": <0-10>, "reason": "<one sentence>" }
+]
+
+Score every job in the input. Be strict — only score 6+ if you would genuinely recommend this job.`.trim()
+}
+
 export function buildCVParserPrompt(): string {
   return `You are a CV parser. Extract structured data from the raw CV text provided.
 
