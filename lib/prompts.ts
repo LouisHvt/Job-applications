@@ -14,7 +14,7 @@ MASTER EXPERIENCE BANK (source of truth — all experiences, bullet points, and 
 ${experienceBank}
 
 KEY STATS (use in summary):
-${profile.keyStats.length ? profile.keyStats.map(s => `- ${s}`).join('\n') : '(derive key stats from the experience bank)'}
+${(profile.keyStats ?? []).length ? (profile.keyStats ?? []).map(s => `- ${s}`).join('\n') : '(derive key stats from the experience bank)'}
 
 YOUR TASK:
 Read the job posting carefully. Then select the 2–3 most relevant experiences from the bank and pick exactly 3 bullet points per experience (never more). Rewrite each bullet to mirror the exact language, tone, and priorities of the job posting — do not invent facts, only rephrase what exists. Keep each bullet to one line where possible — the CV must fit on a single A4 page.
@@ -66,7 +66,7 @@ MASTER EXPERIENCE BANK:
 ${experienceBank}
 
 KEY STATS (use at least one):
-${profile.keyStats.length ? profile.keyStats.map(s => `- ${s}`).join('\n') : '(derive key stats from the experience bank)'}
+${(profile.keyStats ?? []).length ? (profile.keyStats ?? []).map(s => `- ${s}`).join('\n') : '(derive key stats from the experience bank)'}
 
 COVER LETTER RULES — READ CAREFULLY:
 
