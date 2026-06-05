@@ -21,7 +21,7 @@ const STATUS_COLORS: Record<JobStatus, string> = {
   Skipped: 'bg-gray-100 text-gray-400',
 }
 
-type Tab = 'cv' | 'cover-letter'
+type Tab = 'cv' | 'cover-letter' | 'interview-prep'
 
 interface Props {
   job: NotionJob
@@ -38,6 +38,8 @@ export default function JobDetail({ job, profile }: Props) {
   const [refining, setRefining] = useState(false)
   const [refineCVInput, setRefineCVInput] = useState('')
   const [refiningCV, setRefiningCV] = useState(false)
+  const [interviewPrep, setInterviewPrep] = useState('')
+  const [loadingPrep, setLoadingPrep] = useState(false)
 
   const refineCoverLetter = async () => {
     if (!refineInput.trim() || !coverLetter) return
@@ -102,6 +104,14 @@ export default function JobDetail({ job, profile }: Props) {
       setSavedToNotion(true)
     }
     setLoadingCL(false)
+  }
+
+  const generateInterviewPrep = async () => {
+    setLoadingPrep(true)
+    const res = await fetch(`/api/jobs/${job.id}/interview-prep`, { method: 'POST' })
+    const data = await res.json()
+    if (data.content) setInterviewPrep(data.content)
+    setLoadingPrep(false)
   }
 
   const refineCV = async () => {
@@ -246,7 +256,7 @@ export default function JobDetail({ job, profile }: Props) {
         {/* Right: Generate */}
         <div>
           <div className="flex gap-2 mb-4">
-            {(['cv', 'cover-letter'] as Tab[]).map(t => (
+            {(['cv', 'cover-letter', 'interview-prep'] as Tab[]).map(t => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -254,7 +264,14 @@ export default function JobDetail({ job, profile }: Props) {
                   tab === t ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                {t === 'cv' ? 'CV' : 'Cover Letter'}
+                {t === 'cv' ? 'CV' : t === 'cover-letter' ? 'Cover Letter' : (
+                  <span className="flex items-center gap-1.5">
+                    Interview Prep
+                    {currentStatus === 'Interview' && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 inline-block" />
+                    )}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -420,6 +437,30 @@ export default function JobDetail({ job, profile }: Props) {
                       </button>
                     </div>
                   </>
+                )}
+              </div>
+            )}
+            {/* ── INTERVIEW PREP TAB ── */}
+            {tab === 'interview-prep' && (
+              <div className="flex flex-col gap-4">
+                <button
+                  onClick={generateInterviewPrep}
+                  disabled={loadingPrep || !job.jobDescription}
+                  className={`w-full py-3 rounded-xl text-white font-medium text-sm transition-all ${
+                    loadingPrep || !job.jobDescription
+                      ? 'bg-gray-300 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-purple-600 to-purple-500 hover:opacity-90'
+                  }`}
+                >
+                  {loadingPrep ? 'Generating...' : interviewPrep ? 'Regenerate Prep' : 'Generate Interview Prep'}
+                </button>
+
+                {interviewPrep && (
+                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 max-h-[60vh] overflow-y-auto">
+                    <pre className="text-sm text-gray-700 whitespace-pre-wrap font-sans leading-relaxed">
+                      {interviewPrep}
+                    </pre>
+                  </div>
                 )}
               </div>
             )}
