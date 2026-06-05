@@ -152,8 +152,24 @@ export default function JobList({ jobs: initialJobs }: { jobs: NotionJob[] }) {
   const [tierFilter, setTierFilter] = useState<TierFilter>('All')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('Proposed')
   const [showAddModal, setShowAddModal] = useState(false)
+  const [jobs, setJobs] = useState(initialJobs)
+  const [deleting, setDeleting] = useState<string | null>(null)
 
-  const filtered = initialJobs.filter(j => {
+  const deleteJob = async (id: string, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDeleting(id)
+    setJobs(prev => prev.filter(j => j.id !== id))
+    try {
+      await fetch(`/api/jobs/${id}`, { method: 'DELETE' })
+    } catch {
+      setJobs(initialJobs)
+    } finally {
+      setDeleting(null)
+    }
+  }
+
+  const filtered = jobs.filter(j => {
     if (tierFilter !== 'All' && j.tier !== tierFilter) return false
     if (j.status !== statusFilter) return false
     return true
@@ -192,8 +208,8 @@ export default function JobList({ jobs: initialJobs }: { jobs: NotionJob[] }) {
             }`}
           >
             {tier === 'All'
-              ? `All (${initialJobs.length})`
-              : `${tier} (${initialJobs.filter(j => j.tier === tier).length})`}
+              ? `All (${jobs.length})`
+              : `${tier} (${jobs.filter(j => j.tier === tier).length})`}
           </button>
         ))}
       </div>
@@ -208,7 +224,7 @@ export default function JobList({ jobs: initialJobs }: { jobs: NotionJob[] }) {
               statusFilter === status ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'
             }`}
           >
-            {status} ({initialJobs.filter(j => j.status === status).length})
+            {status} ({jobs.filter(j => j.status === status).length})
           </button>
         ))}
       </div>
@@ -226,11 +242,12 @@ export default function JobList({ jobs: initialJobs }: { jobs: NotionJob[] }) {
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-4 py-3">Status</th>
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-4 py-3">Track</th>
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-4 py-3">Date</th>
+                <th className="px-4 py-3" />
               </tr>
             </thead>
             <tbody>
               {filtered.map(job => (
-                <tr key={job.id} className="border-b border-gray-50 hover:bg-blue-50/40 transition-colors">
+                <tr key={job.id} className="group border-b border-gray-50 hover:bg-blue-50/40 transition-colors">
                   <td className="px-5 py-3.5">
                     <Link href={`/jobs/${job.id}`} className="group">
                       <div className="flex items-center gap-2">
@@ -257,6 +274,18 @@ export default function JobList({ jobs: initialJobs }: { jobs: NotionJob[] }) {
                   </td>
                   <td className="px-4 py-3.5 text-xs text-gray-400">
                     {job.dateFound ? new Date(job.dateFound).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—'}
+                  </td>
+                  <td className="px-4 py-3.5 text-right">
+                    <button
+                      onClick={e => deleteJob(job.id, e)}
+                      disabled={deleting === job.id}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded text-gray-300 hover:text-red-500 hover:bg-red-50"
+                      title="Delete job"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </button>
                   </td>
                 </tr>
               ))}

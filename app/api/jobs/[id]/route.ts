@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { fetchJob, updateJobStatus } from '@/lib/notion'
+import { fetchJob, updateJobStatus, deleteJob } from '@/lib/notion'
 import { generateBothAndSave } from '@/lib/generate'
 import { JobStatus } from '@/lib/types'
 
@@ -21,5 +21,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     )
   }
 
+  return NextResponse.json({ ok: true })
+}
+
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+  await deleteJob(params.id)
   return NextResponse.json({ ok: true })
 }

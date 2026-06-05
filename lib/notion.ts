@@ -216,6 +216,10 @@ export async function skipStaleProposedJobs(): Promise<number> {
   return response.results.length
 }
 
+export async function deleteJob(pageId: string): Promise<void> {
+  await notion.pages.update({ page_id: pageId, archived: true })
+}
+
 export async function updateJobStatus(pageId: string, status: JobStatus): Promise<void> {
   await notion.pages.update({
     page_id: pageId,
