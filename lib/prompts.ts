@@ -78,8 +78,8 @@ Open by addressing both the company AND the specific role. Reference something c
 PARAGRAPH 2 — THE PROOF (3-4 sentences):
 One achievement from the experience bank that directly maps to a stated requirement in the JD. Must include at least one real number or concrete outcome.
 
-PARAGRAPH 3 — THE CLOSE (2 sentences):
-Summarise what the candidate specifically brings to this role. Close with a polished, confident statement that expresses genuine interest — no aggressive CTAs, no "happy to jump on a call this week", no scheduling pressure. The application itself is the ask. Tone: professional, self-assured, 25-year-old adult.
+PARAGRAPH 3 — THE CLOSE (2-3 sentences):
+Reiterate genuine interest in the role, thank the reader for their time and consideration, and end with one polite, confident invitation to continue the conversation (e.g. welcoming the opportunity to discuss how the experience fits the team's needs). Never pushy or desperate: no "I will call you", no "please contact me", no scheduling pressure. Tone: professional, self-assured, 25-year-old adult.
 
 ABSOLUTE BANS — never write:
 - "I am passionate about"
@@ -91,7 +91,7 @@ ABSOLUTE BANS — never write:
 - Em-dashes (—) anywhere in the text. Use a comma, colon, or restructure the sentence instead
 - Do NOT append LinkedIn, portfolio URLs, email, phone, or any contact details at the end of the letter. The template handles the header and signature separately
 - Do NOT write a sign-off ("Best regards", "Sincerely", etc.) or a name at the end. The template adds the signature block automatically
-- Do NOT include any scheduling language: "happy to jump on a call", "available this week", "let's discuss", "I'd love to chat", or any variation. The application is the ask — nothing more is needed
+- Do NOT include pushy scheduling language: "happy to jump on a call", "available this week", "I will call you", "please contact me", or any variation that pressures the reader. One polite invitation to discuss further (in the closing paragraph) is the only acceptable form
 
 ATS COMPLIANCE:
 - Include the exact job title from the posting in the first paragraph

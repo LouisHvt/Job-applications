@@ -12,6 +12,9 @@ const esc = (s = '') =>
 const safeHref = (url: string) => (/^https?:\/\//i.test(url) ? esc(url) : '')
 
 export function buildCVHtml(cvData: CVData, profile: Profile): string {
+  // Profile fields can be absent when profile.json was built from an older parse — guard all array accesses
+  const languages = profile.languages ?? []
+  const otherInfo = profile.otherInfo ?? []
   const portfolioDisplay = esc((profile.portfolio || '')
     .replace('https://', '').replace('http://', ''))
 
@@ -49,10 +52,10 @@ export function buildCVHtml(cvData: CVData, profile: Profile): string {
         </div>` : ''}
     </div>`).join('')
 
-  const languagesHtml = profile.languages.length > 0 ? `
+  const languagesHtml = languages.length > 0 ? `
     <div style="font-weight:bold;font-size:11pt;text-transform:uppercase;margin-top:6pt;margin-bottom:1pt;letter-spacing:0.3pt">LANGUAGES</div>
     <hr style="border:none;border-top:0.75px solid #000;margin:0 0 3pt 0" />
-    ${profile.languages.map(lang => `
+    ${languages.map(lang => `
       <div style="display:flex;gap:0;margin-bottom:1.5pt;font-size:11pt">
         <span style="min-width:16.8pt;padding-left:0.5pt;flex-shrink:0">&#9642;</span>
         <span style="flex:1">${esc(lang)}</span>
@@ -63,10 +66,10 @@ export function buildCVHtml(cvData: CVData, profile: Profile): string {
     <hr style="border:none;border-top:0.75px solid #000;margin:0 0 3pt 0" />
     <div style="font-size:11pt;margin-bottom:2pt;margin-top:2pt">${cvData.skills.map(esc).join(' &middot; ')}</div>` : ''
 
-  const otherInfoHtml = profile.otherInfo.length > 1 ? `
+  const otherInfoHtml = otherInfo.length > 1 ? `
     <div style="font-weight:bold;font-size:11pt;text-transform:uppercase;margin-top:6pt;margin-bottom:1pt;letter-spacing:0.3pt">OTHER INFORMATION</div>
     <hr style="border:none;border-top:0.75px solid #000;margin:0 0 3pt 0" />
-    ${profile.otherInfo.slice(1).map(info => `
+    ${otherInfo.slice(1).map(info => `
       <div style="display:flex;gap:0;margin-bottom:1.5pt;font-size:11pt">
         <span style="min-width:16.8pt;padding-left:0.5pt;flex-shrink:0">&#9642;</span>
         <span style="flex:1">${esc(info)}</span>
@@ -82,7 +85,7 @@ export function buildCVHtml(cvData: CVData, profile: Profile): string {
   <div style="font-size:17pt;font-weight:bold;text-align:center;margin-bottom:3pt;letter-spacing:1pt;text-transform:uppercase">${esc(profile.name).toUpperCase()}</div>
   <div style="text-align:center;font-size:11pt;margin-bottom:1.5pt">${esc(profile.location)} &nbsp;|&nbsp; ${esc(profile.phone)} &nbsp;|&nbsp; ${esc(profile.email)}</div>
   <div style="display:flex;justify-content:space-between;font-size:11pt;margin-bottom:1.5pt">
-    <span>${esc(profile.linkedin.replace('https://', ''))}${profile.otherInfo[0] ? ` &nbsp;|&nbsp; ${esc(profile.otherInfo[0])}` : ''}</span>
+    <span>${esc((profile.linkedin || '').replace('https://', ''))}${otherInfo[0] ? ` &nbsp;|&nbsp; ${esc(otherInfo[0])}` : ''}</span>
     ${portfolioHref ? `<span>Portfolio:&nbsp;<a href="${portfolioHref}" style="color:#000;text-decoration:underline">${portfolioDisplay}</a></span>` : ''}
   </div>
   <div style="font-weight:bold;font-size:11pt;text-transform:uppercase;margin-top:6pt;margin-bottom:1pt;letter-spacing:0.3pt">PROFESSIONAL SUMMARY</div>
@@ -130,8 +133,6 @@ export function buildCoverLetterHtml(coverLetter: string, job: NotionJob, profil
   <hr style="border:none;border-top:1px solid #4a463d;opacity:0.35;margin:18px 0" />
   <div style="font-size:14px;line-height:24px;color:#1a1814">
     ${paragraphsHtml}
-    <p style="margin-bottom:16px">I trust that you can see how I could be a great fit for this position.</p>
-    <p>Thank you for your consideration.</p>
   </div>
   <div style="margin-top:28px">
     <div style="font-size:13.5px;font-style:italic;color:#4a463d;margin-bottom:12px">Best regards,</div>
