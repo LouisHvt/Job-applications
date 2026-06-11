@@ -134,7 +134,7 @@ export function buildCoverLetterHtml(coverLetter: string, job: NotionJob, profil
   <div style="font-size:14px;line-height:24px;color:#1a1814">
     ${paragraphsHtml}
   </div>
-  <div style="margin-top:28px">
+  <div style="margin-top:28px;break-inside:avoid;page-break-inside:avoid">
     <div style="font-size:13.5px;font-style:italic;color:#4a463d;margin-bottom:12px">Best regards,</div>
     <div style="font-size:30px;font-style:italic;letter-spacing:-0.68px;line-height:30px;color:#1a1814;margin-bottom:8px">${esc(sigInitials)}</div>
     <div style="width:80px;height:1px;background-color:#4a463d;opacity:0.35;margin-bottom:8px"></div>
