@@ -43,8 +43,11 @@ export async function POST(req: Request) {
       ],
     })
 
+    // Same extraction as lib/generate.ts — the model sometimes wraps JSON in markdown fences
     const raw = (response.content[0] as { text: string }).text.trim()
-    const cv: CVData = JSON.parse(raw)
+    const jsonMatch = raw.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) throw new Error('Invalid AI response')
+    const cv: CVData = JSON.parse(jsonMatch[0])
     return NextResponse.json({ cv })
   } catch (err) {
     console.error('[refine-cv error]', err)
