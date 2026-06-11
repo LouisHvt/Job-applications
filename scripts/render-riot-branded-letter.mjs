@@ -12,7 +12,7 @@ const OUT_HTML = 'generated/riot-cover-letter-branded.html'
 // ---------------------------------------------------------------- letter text
 const GREETING = 'Dear Hiring Manager,'
 const PARAGRAPHS = [
-  `My name is Louis Houvet, a 25-year-old professional starting my career after a master's in strategic marketing and communications, a bachelor's in hospitality management, and over three years of experience producing live events across tourism and esports. Gaming has been part of my life since I was a kid, and Riot's titles are the ones I always come back to. Stepping into esports recently made me realise how much I enjoy this world, and that is the real reason I am writing: the Esports Events Coordinator role for APAC Emerging Markets is one of the few jobs where I can genuinely see myself.`,
+  `My name is Louis Houvet, a 25-year-old French professional starting my career after a master's in strategic marketing and communications, a bachelor's in hospitality management, and over three years of experience producing live events across tourism and esports. Gaming has been part of my life since I was a kid, and Riot's titles are the ones I always come back to. Stepping into esports recently made me realise how much I enjoy this world, and that is the real reason I am writing: the Esports Events Coordinator role for APAC Emerging Markets is one of the few jobs where I can genuinely see myself.`,
   `Last year, I spent half a year working with Gen.G in Riyadh, including a whole month running the Superfan Program at the Esports World Cup. I coordinated vendors, worked alongside the broadcast and sponsorship teams to keep the creative vision intact on site, and looked after the technical side of the activation with our production partners, from LED screens to power and connectivity. Those months asked a lot of us, and while I enjoyed every day of them, I also felt what a long event can take out of you. I learned a lot about handling pressure, time commitment, and even my own emotions along the way.`,
   `Before esports, I coordinated events at Procon in Mexico City, contracting more than fifteen vendors across three countries and organising travel programs for groups of fifty or more international guests. Those years taught me to stay organised, adapt quickly, and communicate well with people from very different backgrounds. I plan my projects with tools like Airtable and Google Suite, and I like looking back at event data to see what we could do better next time.`,
   `To be frank, Riot has been at the top of my list since I started my bachelor's. I used to look at the headquarters in California and the esports hub in Berlin, knowing there were offices in other cities too. So when I saw this role was based in Singapore, a country I have already visited four times, it caught my attention immediately. Then I watched the office presentation video, and I just felt it: I think I could belong and grow there.`,
@@ -106,6 +106,8 @@ function buildHtml({ chamberB64, logoB64 }) {
     text-transform: uppercase;
   }
   .contact .slash { color: var(--red); font-weight: 600; padding: 0 5px; }
+  .contact .nowrap { white-space: nowrap; }
+  .contact br + .nowrap { display: inline-block; margin-top: 2px; }
   .role-tag {
     text-align: right; font-family: 'Oswald', sans-serif;
     font-size: 10px; letter-spacing: 2.4px; color: var(--red);
@@ -131,12 +133,34 @@ function buildHtml({ chamberB64, logoB64 }) {
   .riot-wordmark span { color: var(--navy); font-weight: 400; }
 
   .greeting { margin-top: 22px; font-size: 13.6px; font-weight: 500; }
+  .greeting .diamond {
+    display: inline-block; width: 6px; height: 6px; background: var(--red);
+    transform: rotate(45deg); margin-right: 9px; vertical-align: 1px;
+  }
+
+  /* subtle Riot/VALORANT UI details */
+  .bigslash {
+    position: absolute; top: 33mm; right: 14mm; z-index: 0;
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 150px;
+    line-height: 1; color: rgba(15, 25, 35, 0.045); pointer-events: none;
+  }
+  .corner { position: absolute; width: 16px; height: 16px; z-index: 0; pointer-events: none; }
+  .corner.tl { top: 34mm; left: 7mm; border-top: 1.5px solid rgba(255,70,85,0.4); border-left: 1.5px solid rgba(255,70,85,0.4); }
+  .corner.tr { top: 34mm; right: 7mm; border-top: 1.5px solid rgba(255,70,85,0.4); border-right: 1.5px solid rgba(255,70,85,0.4); }
+  .corner.bl { bottom: 16mm; left: 7mm; border-bottom: 1.5px solid rgba(255,70,85,0.4); border-left: 1.5px solid rgba(255,70,85,0.4); }
+  .corner.br { bottom: 16mm; right: 7mm; border-bottom: 1.5px solid rgba(255,70,85,0.4); border-right: 1.5px solid rgba(255,70,85,0.4); }
+  .sidetag {
+    position: absolute; left: 6mm; top: 50%; z-index: 0; pointer-events: none;
+    transform: rotate(180deg); writing-mode: vertical-rl;
+    font-family: 'Oswald', sans-serif; font-size: 7px; letter-spacing: 5px;
+    color: rgba(15, 25, 35, 0.18); text-transform: uppercase;
+  }
   .letter { margin-top: 12px; max-width: 168mm; }
   .letter p { font-size: 13.2px; line-height: 1.52; margin-bottom: 11px; text-align: justify; }
 
   /* chamber watermark */
   .chamber {
-    position: absolute; right: -30px; bottom: 24mm; height: 560px;
+    position: absolute; right: -92px; bottom: 18mm; height: 660px;
     opacity: 0.17; z-index: 0; pointer-events: none;
   }
 
@@ -170,7 +194,10 @@ function buildHtml({ chamberB64, logoB64 }) {
   <div class="band">
     <div>
       <div class="name">LOUIS HOUVET</div>
-      <div class="contact">1louishvt1@gmail.com<span class="slash">//</span>Madrid<span class="slash">//</span>louishouvet.vercel.app<span class="slash">//</span>linkedin.com/in/louis-houvet</div>
+      <div class="contact">
+        <span class="nowrap">1louishvt1@gmail.com</span><span class="slash">//</span><span class="nowrap">Madrid</span><span class="slash">//</span><span class="nowrap">louishouvet.vercel.app</span><br/>
+        <span class="nowrap">linkedin.com/in/louis-houvet</span>
+      </div>
     </div>
     <div class="role-tag">
       Esports Events Coordinator<br/><span>APAC Emerging Markets // Contract</span>
@@ -179,6 +206,12 @@ function buildHtml({ chamberB64, logoB64 }) {
   <div class="redline"></div>
 
   <img class="chamber" src="${chamberB64}" alt="" />
+  <div class="bigslash">//</div>
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="sidetag">Esports // Events // APAC-EM // 2026</div>
 
   <div class="content">
     <div class="recipient-row">
@@ -189,7 +222,7 @@ function buildHtml({ chamberB64, logoB64 }) {
       ${logoHtml}
     </div>
 
-    <div class="greeting">${GREETING}</div>
+    <div class="greeting"><span class="diamond"></span>${GREETING}</div>
     <div class="letter">
       ${paragraphsHtml}
     </div>
